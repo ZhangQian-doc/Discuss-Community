@@ -19,155 +19,162 @@ import java.util.*;
 @Controller
 @RequestMapping("/alpha")
 public class AlphaController {
+
     @Autowired
     private AlphaService alphaService;
 
     @RequestMapping("/hello")
     @ResponseBody
-    public String seyHello(){
-        return "Hello Spring Boot";
+    public String sayHello() {
+        return "Hello Spring Boot.";
     }
 
     @RequestMapping("/data")
     @ResponseBody
-    public String getData(){
+    public String getData() {
         return alphaService.find();
     }
 
     @RequestMapping("/http")
-    public void http(HttpServletRequest request, HttpServletResponse response){
-        //获取请求数据
+    public void http(HttpServletRequest request, HttpServletResponse response) {
+        // 获取请求数据
         System.out.println(request.getMethod());
         System.out.println(request.getServletPath());
         Enumeration<String> enumeration = request.getHeaderNames();
-        while (enumeration.hasMoreElements()){
+        while (enumeration.hasMoreElements()) {
             String name = enumeration.nextElement();
             String value = request.getHeader(name);
             System.out.println(name + ": " + value);
         }
         System.out.println(request.getParameter("code"));
 
-        //返回响应数据
-
+        // 返回响应数据
         response.setContentType("text/html;charset=utf-8");
-        try(
-            PrintWriter writer = response.getWriter();
+        try (
+                PrintWriter writer = response.getWriter();
         ) {
             writer.write("<h1>牛客网</h1>");
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    //GET请求
-    ///students?current=1&limit=20
 
-    @RequestMapping(path="/students",method = RequestMethod.GET)
+    // GET请求
+
+    // /students?current=1&limit=20
+    @RequestMapping(path = "/students", method = RequestMethod.GET)
     @ResponseBody
     public String getStudents(
-            @RequestParam(name = "current",required = false,defaultValue = "1") int current,
-            @RequestParam(name = "limit",required = false,defaultValue = "10")int limit){
+            @RequestParam(name = "current", required = false, defaultValue = "1") int current,
+            @RequestParam(name = "limit", required = false, defaultValue = "10") int limit) {
         System.out.println(current);
         System.out.println(limit);
         return "some students";
     }
-    //  /student/123
-    @RequestMapping(path = "/student/{id}",method = RequestMethod.GET)
+
+    // /student/123
+    @RequestMapping(path = "/student/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String getStudent(@PathVariable("id") int id){
+    public String getStudent(@PathVariable("id") int id) {
         System.out.println(id);
         return "a student";
     }
 
-    // Post请求
-    @RequestMapping(path = "/student",method = RequestMethod.POST)
+    // POST请求
+    @RequestMapping(path = "/student", method = RequestMethod.POST)
     @ResponseBody
-    public String saveStudent(String name, int age){
+    public String saveStudent(String name, int age) {
         System.out.println(name);
         System.out.println(age);
         return "success";
     }
 
-    // 响应html数据
-    @RequestMapping(path = "teacher",method = RequestMethod.GET)
-    public ModelAndView getTeacher(){
+    // 响应HTML数据
+
+    @RequestMapping(path = "/teacher", method = RequestMethod.GET)
+    public ModelAndView getTeacher() {
         ModelAndView mav = new ModelAndView();
-        mav.addObject("name","张三");
-        mav.addObject("age",30);
+        mav.addObject("name", "张三");
+        mav.addObject("age", 30);
         mav.setViewName("/demo/view");
         return mav;
     }
 
-    @RequestMapping(path = "/school",method = RequestMethod.GET)
-    public String getSchool(Model model){
-        model.addAttribute("name","东莞理工学院");
-        model.addAttribute("age","30");
+    @RequestMapping(path = "/school", method = RequestMethod.GET)
+    public String getSchool(Model model) {
+        model.addAttribute("name", "北京大学");
+        model.addAttribute("age", 80);
         return "/demo/view";
     }
 
-    // 相应json数据(异步请求)
-    // Java对象->JSON字符串->JS对象
-    @RequestMapping(path = "/emp",method = RequestMethod.GET)
+    // 响应JSON数据(异步请求)
+    // Java对象 -> JSON字符串 -> JS对象
+
+    @RequestMapping(path = "/emp", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> getEmp(){
-        Map<String,Object> emp = new HashMap<>();
-        emp.put("name","张三");
-        emp.put("age",23);
-        emp.put("salary",8000.00);
+    public Map<String, Object> getEmp() {
+        Map<String, Object> emp = new HashMap<>();
+        emp.put("name", "张三");
+        emp.put("age", 23);
+        emp.put("salary", 8000.00);
         return emp;
     }
 
-    @RequestMapping(path = "/emps",method = RequestMethod.GET)
+    @RequestMapping(path = "/emps", method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String,Object>> getEmps(){
-        List<Map<String,Object>> list = new ArrayList<>();
-        Map<String,Object> emp = new HashMap<>();
-        emp.put("name","张三");
-        emp.put("age",23);
-        emp.put("salary",8000.00);
+    public List<Map<String, Object>> getEmps() {
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        Map<String, Object> emp = new HashMap<>();
+        emp.put("name", "张三");
+        emp.put("age", 23);
+        emp.put("salary", 8000.00);
         list.add(emp);
+
         emp = new HashMap<>();
-        emp.put("name","李四");
-        emp.put("age",24);
-        emp.put("salary",7000.00);
+        emp.put("name", "李四");
+        emp.put("age", 24);
+        emp.put("salary", 9000.00);
         list.add(emp);
+
         emp = new HashMap<>();
-        emp.put("name","王五");
-        emp.put("age",21);
-        emp.put("salary",4000.00);
+        emp.put("name", "王五");
+        emp.put("age", 25);
+        emp.put("salary", 10000.00);
         list.add(emp);
 
         return list;
     }
 
-    // cookies示例
+    // cookie示例
 
-    @RequestMapping(path = "/cookie/set",method = RequestMethod.GET)
+    @RequestMapping(path = "/cookie/set", method = RequestMethod.GET)
     @ResponseBody
-    public String setCookie(HttpServletResponse response){
-        // 创建Cookie
+    public String setCookie(HttpServletResponse response) {
+        // 创建cookie
         Cookie cookie = new Cookie("code", CommunityUtil.generateUUID());
         // 设置cookie生效的范围
         cookie.setPath("/community/alpha");
         // 设置cookie的生存时间
-        cookie.setMaxAge(60*10);
+        cookie.setMaxAge(60 * 10);
         // 发送cookie
         response.addCookie(cookie);
 
         return "set cookie";
     }
 
-
     @RequestMapping(path = "/cookie/get", method = RequestMethod.GET)
     @ResponseBody
-    public String getCookie(@CookieValue("code") String code){
+    public String getCookie(@CookieValue("code") String code) {
         System.out.println(code);
         return "get cookie";
     }
 
     // session示例
+
     @RequestMapping(path = "/session/set", method = RequestMethod.GET)
     @ResponseBody
-    public String setSession(HttpSession session){
+    public String setSession(HttpSession session) {
         session.setAttribute("id", 1);
         session.setAttribute("name", "Test");
         return "set session";
@@ -175,9 +182,19 @@ public class AlphaController {
 
     @RequestMapping(path = "/session/get", method = RequestMethod.GET)
     @ResponseBody
-    public String getSession(HttpSession session){
+    public String getSession(HttpSession session) {
         System.out.println(session.getAttribute("id"));
         System.out.println(session.getAttribute("name"));
         return "get session";
     }
+
+    // ajax示例
+    @RequestMapping(path = "/ajax", method = RequestMethod.POST)
+    @ResponseBody
+    public String testAjax(String name, int age) {
+        System.out.println(name);
+        System.out.println(age);
+        return CommunityUtil.getJSONString(0, "操作成功!");
+    }
+
 }
